@@ -1,0 +1,6 @@
+url,publisher,document_type,related_scheme,topic_tags,last_checked,raw_text_path,fetched_at
+https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/direct,HDFC,Scheme Page,HDFC Mid Cap Fund,"expense_ratio, exit_load, sip",2026-03-06,data/raw\direct.txt,2026-03-06
+https://www.hdfcfund.com/services/consolidated-account-statement,HDFC,Service Page,General,"account_statement, download",2026-03-06,data/raw\consolidated_account_statement.txt,2026-03-06
+https://www.hdfcfund.com/statutory-disclosure/riskometers,HDFC,Statutory,General,"riskometer, risk_level",2026-03-06,data/raw\riskometers.txt,2026-03-06
+https://www.camsonline.com/Investors/Service-requests/Consolidated-Account-Statement,CAMS,Service Center,General,"capital_gains, statement, tax",2026-03-06,data/raw\Consolidated_Account_Statement.txt,2026-03-06
+https://www.hdfcfund.com/explore/mutual-funds/hdfc-flexi-cap-fund/direct,HDFC,Scheme Page,HDFC Flexi Cap Fund,"expense_ratio, exit_load, sip",2026-03-06,data/raw\direct.txt,2026-03-06

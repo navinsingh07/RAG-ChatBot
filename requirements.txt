@@ -1,0 +1,13 @@
+playwright
+requests
+beautifulsoup4
+httpx
+PyPDF2
+sentence-transformers
+chromadb
+groq
+fastapi
+uvicorn
+python-dotenv
+pandas
+sqlalchemy

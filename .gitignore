@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Data
+data/raw/
+data/schemes/
+data/*.db
+data/vector_store/
+
+# Node
+node_modules/
+dist/
+ui/dist/
+ui/node_modules/
+.DS_Store
