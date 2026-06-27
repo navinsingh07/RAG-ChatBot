@@ -1,22 +1,32 @@
 import json
 import os
 import unittest
+from playwright.sync_api import sync_playwright
 from scraper.groww_scraper import GrowwScraper
 
 class TestPhase1(unittest.TestCase):
-    def setUp(self):
-        self.scraper = GrowwScraper()
-        self.test_url = "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth"
-        self.data_file = "data/schemes/hdfc_mid_cap_direct_growth.json"
+    @classmethod
+    def setUpClass(cls):
+        cls.playwright = sync_playwright().start()
+        cls.browser = cls.playwright.chromium.launch(headless=True)
+        cls.context = cls.browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        cls.page = cls.context.new_page()
+        cls.scraper = GrowwScraper()
+        cls.test_url = "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth"
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.browser.close()
+        cls.playwright.stop()
 
     def test_scraping_existence(self):
         """Test if scraping returns data and keys are present."""
-        data = self.scraper.scrape_scheme_details(self.test_url)
+        data = self.scraper.scrape_scheme_details(self.page, self.test_url)
         self.assertIsNotNone(data, "Scraping failed to return data")
         
         required_keys = [
-            "scheme_name", "groww_scheme_url", "scraped_at", 
-            "expense_ratio", "min_sip", "risk_level", "nav_value"
+            "scheme_name", "groww_scheme_url", "last_scraped_at", 
+            "expense_ratio", "minimum_sip", "risk_level", "nav"
         ]
         for key in required_keys:
             self.assertIn(key, data, f"Key '{key}' missing from scraped data")
@@ -24,16 +34,15 @@ class TestPhase1(unittest.TestCase):
 
     def test_data_format(self):
         """Verify data formats (percentages, currency symbols)."""
-        data = self.scraper.scrape_scheme_details(self.test_url)
+        data = self.scraper.scrape_scheme_details(self.page, self.test_url)
         
         # Expense Ratio should contain %
         self.assertIn("%", data["expense_ratio"], f"Expense ratio {data['expense_ratio']} lacks '%'")
         
         # NAV and SIP should contain ₹ symbol (or unicode \u20b9)
-        self.assertTrue("\u20b9" in data["nav_value"] or "₹" in data["nav_value"], 
-                        f"NAV {data['nav_value']} lacks currency symbol")
-        self.assertTrue("\u20b9" in data["min_sip"] or "₹" in data["min_sip"], 
-                        f"Min SIP {data['min_sip']} lacks currency symbol")
+        self.assertTrue(isinstance(data["nav"], (int, float)), "NAV should be a number")
+        self.assertTrue("\u20b9" in data["minimum_sip"] or "₹" in data["minimum_sip"], 
+                        f"Min SIP {data['minimum_sip']} lacks currency symbol")
 
     def test_sources_csv_exists(self):
         """Check if sources.csv was created and has content."""
@@ -44,3 +53,4 @@ class TestPhase1(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
